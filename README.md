@@ -115,8 +115,6 @@ qmake && make
 ./bigTwo          # run from bigTwo/ so the ./dataset asset paths resolve
 ```
 
-> Originally developed and tested on Windows under **Cygwin/X** (`startxwin` + `pulseaudio` for sound) — see [`README.pdf`](README.pdf) for the original course run instructions, and [`大老二遊戲說明.pdf`](大老二遊戲說明.pdf) for the full (Chinese) design document.
-
 ## Project structure
 
 ```
@@ -136,5 +134,5 @@ bigtwo/
 
 ## Authors
 
-- **Ana Liu** — [@12yuuuu](https://github.com/12yuuuu)
+- **Ana Liu** ([@12yuuuu](https://github.com/12yuuuu))
 - **Donna Hsu**
