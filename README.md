@@ -1,111 +1,80 @@
-# Big Two — Qt Desktop Card Game
-
-![C++](https://img.shields.io/badge/C%2B%2B-14-00599C?logo=cplusplus&logoColor=white)
-![Qt](https://img.shields.io/badge/Qt-5_(Widgets_·_GraphicsView_·_Multimedia)-41CD52?logo=qt&logoColor=white)
-![Build](https://img.shields.io/badge/build-qmake_%2B_make-blue)
-![Course](https://img.shields.io/badge/course-NCKU_EE_Project_2-9f1a1a)
-
-A desktop implementation of **Big Two**, written from scratch in **C++ / Qt 5** with a custom rule engine, hot-seat multiplayer for 2–4 players, a hint system, multi-round scoring, sound effects, and a fully mouse-driven table UI.
+<p align="center">
+  <img src="docs/banner.png" alt="Big Two — a Qt 5 / C++ desktop card game">
+</p>
 
 <p align="center">
-  <img src="docs/combinations.gif" alt="Animated showcase of the six card combinations, rendered with the game's actual card art" width="760">
-  <br>
-  <sub><i>The six playable combinations, animated with the game's own card art.</i></sub>
+  <img src="https://img.shields.io/badge/C%2B%2B-14-00599C?logo=cplusplus&logoColor=white" alt="C++14">
+  <img src="https://img.shields.io/badge/Qt-5_Widgets_·_GraphicsView_·_Multimedia-41CD52?logo=qt&logoColor=white" alt="Qt 5">
+  <img src="https://img.shields.io/badge/build-qmake_%2B_make-blue" alt="qmake + make">
+  <img src="https://img.shields.io/badge/rule_engine-hand--rolled-9f1a1a" alt="hand-rolled rule engine">
 </p>
+
+A desktop implementation of **Big Two**, the classic Taiwanese climbing card game, written in **C++ / Qt 5**. There is no game framework underneath — every rule, interaction and screen is built directly on Qt's Graphics View scene graph: a hand-rolled rule engine, hot-seat multiplayer for 2–4 players, a hint system, multi-round scoring and sound effects.
+
+![Animated showcase of the six card combinations, rendered with the game's actual card art](docs/combinations.gif)
+
+<sub><i>The six playable combinations, animated with the game's own card art.</i></sub>
 
 <!-- TODO: record a short gameplay clip (ScreenToGif / LICEcap work well), save it as docs/demo.gif, then uncomment:
-<p align="center">
-  <img src="docs/demo.gif" alt="Gameplay demo" width="760">
-</p>
+![Gameplay demo](docs/demo.gif)
 -->
 
-## Features
+## Highlights
 
-| | Feature | Where to look |
-|---|---------|---------------|
-| 🃏 | **Complete rule engine** — classifies any selection as *single / pair / straight / full house / four-of-a-kind / straight flush*, including the special straights `A-2-3-4-5` and `2-3-4-5-6` and the forbidden ones (`J-Q-K-A-2`, `Q-K-A-2-3`, `K-A-2-3-4`) | [`mainwindow.cpp`](bigTwo/mainwindow.cpp) → `isSelectionValid()` |
-| ⚖️ | **Legal-move validation** — rank → suit tie-breaking (`2 > A > K > … > 3`, `♠ > ♥ > ♦ > ♣`), plus the *bomb* hierarchy: four-of-a-kind beats any single/pair/straight/full house, straight flush beats everything | `isPutValid()` |
-| 👥 | **2 / 3 / 4-player hot-seat mode** — the deal adapts (26 / 17 / 13 cards each) and the whole table **rotates** every turn so the current player always sits at the bottom with their hand face-up | `startplay()`, `movePlayersClock()` |
-| 💡 | **Hint engine** — one click searches the sorted hand for the lowest combination that legally beats the last play (singles, pairs, straights incl. edge straights, full houses) and auto-raises those cards | `recommandCard()` |
-| 🖱️ | **Interactive cards** — custom `QGraphicsPixmapItem` with hover-lift, click-to-raise selection (max 5 cards) and click feedback sounds | [`carditem.cpp`](bigTwo/carditem.cpp) |
-| 🔘 | **Sprite buttons** — reusable image button with hover-state swap, wired through Qt signals/slots | [`button.cpp`](bigTwo/button.cpp) |
-| 🏆 | **Multi-round scoring** — winner collects the sum of every loser's remaining cards, **doubled** for any loser still holding a 2; interlude scoreboard between rounds, victory screen at 50 points | `countTheScore()`, `showScore()`, `winGame()` |
-| ♣️ | **Proper opening & pass rules** — the first combination of a round must contain the 3♣; passing locks you out for the trick; when everyone else passes, the trick winner leads freely | `playCards2()`, `pass()` |
-| 🔊 | **Sound effects** — distinct cues for selecting, playing, passing and illegal moves | `QSound::play()` calls |
+- **Complete rule engine.** `isSelectionValid()` classifies any selection as *single / pair / straight / full house / four-of-a-kind / straight flush*, including the special straights `A-2-3-4-5` and `2-3-4-5-6` and rejecting the illegal ones (`J-Q-K-A-2`, `Q-K-A-2-3`, `K-A-2-3-4`).
+- **Legal-move validation.** `isPutValid()` compares plays by rank then suit (`2 > A > K > … > 3`, `♠ > ♥ > ♦ > ♣`) and encodes the *bomb* hierarchy — four-of-a-kind beats any single, pair, straight or full house; a straight flush beats everything.
+- **2 / 3 / 4-player hot-seat mode.** The deal adapts (26 / 17 / 13 cards each) and the whole table rotates every turn, so the current player always sits at the bottom with their hand face-up.
+- **Hint engine.** One click searches the sorted hand for the lowest combination that legally beats the last play and auto-raises those cards.
+- **Interactive table.** Custom `QGraphicsPixmapItem` cards with hover-lift and click-to-select (max 5), sprite buttons with hover states, opponents shown as card backs with live count badges.
+- **Multi-round scoring.** The round winner collects the sum of every loser's remaining cards — doubled for any loser still holding a 2 — with an interlude scoreboard between rounds and a victory screen at 50 points.
+- **Proper trick rules.** The first combination of a round must contain the 3♣; passing locks you out for the trick; once everyone else passes, the trick winner leads freely.
 
-## Game flow
+## Gameplay
+
+| Control | Action |
+|---|---|
+| Hover a card | lifts it out of the hand |
+| Click a card | selects / deselects it (up to 5) |
+| `Play` | submits the selection — illegal plays bounce back with an error sound |
+| `Pass` | skips the trick (you stay out until it ends) |
+| `Hint` | auto-selects the lowest combination that beats the last play |
+
+| Combination | Cards | Notes |
+|---|---|---|
+| Single | 1 | rank, then suit decides |
+| Pair | 2 same rank | the ♠ in the pair wins ties |
+| Straight | 5 consecutive | `A2345` … `23456`; `JQKA2 / QKA23 / KA234` are illegal |
+| Full House | 3 + 2 | compared by the triple |
+| Four of a Kind | 4 + 1 | **bomb** — beats single / pair / straight / full house |
+| Straight Flush | 5 consecutive, same suit | **top bomb** — beats everything |
+
+First to **50 points** wins the match:
 
 ```mermaid
 flowchart LR
-    S["🛠 Setting stage<br/>players 2–4 · mode · start"] --> P["🎮 Playing stage<br/>tricks & turn rotation"]
+    S["🛠 Setting stage<br/>players 2–4 · mode"] --> P["🎮 Playing stage<br/>tricks & turn rotation"]
     P --> C["🧮 Scoring stage<br/>losers' cards → winner<br/>(×2 if holding a 2)"]
     C -->|"all scores < 50"| P
     C -->|"someone reaches 50"| A["🏆 Award stage<br/>winner screen"]
 ```
 
-## How it's built
+## How it works
 
-```mermaid
-classDiagram
-    direction LR
-    class Mainwindow {
-        QGraphicsScene* scene
-        vector~Player*~ players
-        vector~Card~ lastPlayed
-        int lasttype, presenttype
-        +isSelectionValid(cards) bool
-        +isPutValid(cards, last) bool
-        +recommandCard()
-        +movePlayersClock()
-        +countTheScore(Player*)
-    }
-    class Player {
-        vector~Card~ hand
-        int score
-        +hasCardTwo() bool
-    }
-    class Card {
-        Suit suit
-        Rank rank
-    }
-    class CardItem {
-        +hoverEnterEvent()
-        +mousePressEvent()
-    }
-    class Button {
-        +clicked() signal
-    }
-    QGraphicsView <|-- Mainwindow
-    QGraphicsPixmapItem <|-- CardItem
-    QGraphicsPixmapItem <|-- Button
-    Mainwindow "1" o-- "2..4" Player
-    Player "1" o-- "*" Card
-    CardItem --> Card
-    Mainwindow --> CardItem : scene items
-```
+![Architecture: Mainwindow (rule engine, hint engine, turn system, scoring, rendering) owns 2–4 Players holding Cards; CardItem and Button are custom QGraphicsPixmapItems rendered in the scene](docs/architecture.png)
 
-A few implementation choices worth noting:
+### Rule engine
 
-- **Combination types as a lattice.** Every play is tagged with a type id (`0` single … `5` straight flush). `isPutValid()` compares same-type plays by rank-then-suit, and encodes the bomb rules by letting types 4/5 cut across the lattice — so "four-of-a-kind beats any pair" falls out of a single `switch`.
-- **Turn rotation by pointer swap.** Instead of tracking a "current seat" everywhere, `movePlayersClock()` rotates the `Player*` pointers themselves. The rendering code only ever draws *player1 at the bottom, face-up* — one perspective, zero per-seat special cases.
-- **Immediate-mode scene.** Each turn rebuilds the `QGraphicsScene` (sorted hand, opponents' card backs with count badges, avatars, scores, round counter) from game state, which keeps UI state impossible to desync from game state.
-- **Asset pipeline.** All 52 card sprites are preloaded into a `QPixmap*[52]` indexed by `suit offset + rank`, so a `Card` maps to its artwork in O(1).
-- **Deterministic opening.** After a time-seeded `std::shuffle`, the 3♣ is moved to the front of the deck so the first hand always contains it — matching the "must open with 3♣" rule.
+Every play is tagged with a type id (`0` single … `5` straight flush). Same-type plays are compared by rank then suit; the bomb rules fall out of letting types 4 and 5 cut across the hierarchy in a single `switch`. The hint engine reuses the same two validators: `recommandCard()` walks the sorted hand from the bottom and returns the first candidate that passes `isSelectionValid() && isPutValid()`.
 
-## Rules quick reference
+### Turn rotation
 
-| Combination | Cards | Notes |
-|---|---|---|
-| Single 單張 | 1 | rank, then suit decides |
-| Pair 對子 | 2 same rank | ♠ in the pair wins ties |
-| Straight 順子 | 5 consecutive | `A2345` … `23456`; `JQKA2 / QKA23 / KA234` are illegal |
-| Full House 葫蘆 | 3 + 2 | compared by the triple |
-| Four of a Kind 鐵支 | 4 + 1 | **bomb** — beats single/pair/straight/full house |
-| Straight Flush 同花順 | 5 consecutive, same suit | **top bomb** — beats everything |
+Instead of tracking a "current seat" everywhere, `movePlayersClock()` rotates the `Player*` pointers themselves. The rendering code only ever draws *player 1 at the bottom, face-up* — one perspective, zero per-seat special cases.
 
-Ranks: `2 > A > K > Q > J > 10 > … > 3` · Suits: `♠ > ♥ > ♦ > ♣` · First to **50 points** wins the match.
+### Rendering
 
-## Build & run
+Each turn rebuilds the `QGraphicsScene` from game state (`updateVisible()`): the sorted hand, opponents' card backs with count badges, avatars, scores and the round counter — so the UI can never desync from the game state. All 52 card sprites are preloaded into a `QPixmap*[52]` indexed by `suit offset + rank`, so a `Card` maps to its artwork in O(1). After a time-seeded `std::shuffle`, the 3♣ is moved to the front of the deck so the first hand always contains it — matching the opening rule.
+
+## Build and run
 
 Requires **Qt 5** (`widgets` + `multimedia` modules) and a C++14 compiler.
 
@@ -117,22 +86,36 @@ qmake && make
 
 ## Project structure
 
-```
-bigtwo/
-├── bigTwo/
-│   ├── main.cpp            # entry point
-│   ├── mainwindow.{h,cpp}  # game loop, rule engine, hint engine, rendering
-│   ├── player.{h,cpp}      # hand, score, avatar
-│   ├── card.{h,cpp}        # Card value type (Suit × Rank enums)
-│   ├── carditem.{h,cpp}    # interactive card sprite (hover / select)
-│   ├── button.{h,cpp}      # image button with hover states
-│   ├── bigTwo.pro          # qmake project
-│   └── dataset/            # card art, table backgrounds, UI sprites, sounds
-├── README.pdf              # original course README
-└── introduction.pdf        # design document (zh-TW)
-```
+| File | Responsibility |
+|---|---|
+| [`bigTwo/mainwindow.{h,cpp}`](bigTwo/mainwindow.cpp) | game loop, rule engine, hint engine, scoring, scene rendering |
+| [`bigTwo/player.{h,cpp}`](bigTwo/player.cpp) | hand, score, avatar, name |
+| [`bigTwo/card.{h,cpp}`](bigTwo/card.cpp) | `Card` value type — `Suit` × `Rank` enums |
+| [`bigTwo/carditem.{h,cpp}`](bigTwo/carditem.cpp) | interactive card sprite — hover-lift, click-select |
+| [`bigTwo/button.{h,cpp}`](bigTwo/button.cpp) | image button with hover states and `clicked()` signal |
+| [`bigTwo/main.cpp`](bigTwo/main.cpp) | entry point |
+| `bigTwo/dataset/` | card art, table backgrounds, UI sprites, sounds |
+| [`README.pdf`](README.pdf) · [`introduction.pdf`](introduction.pdf) | original course docs |
+
+## Tech stack and skills
+
+| | |
+|---|---|
+| **Language** | C++14 — STL containers & algorithms (`std::sort`, `std::shuffle`, `std::map` frequency counting) |
+| **UI** | Qt 5 Widgets + Graphics View framework — custom `QGraphicsItem` subclasses, signals/slots, `QTimer` |
+| **Audio** | Qt Multimedia (`QSound`) |
+| **Build** | qmake + make |
+| **Practices** | rule-engine design, event-driven UI, sprite/asset pipeline, hot-seat state management |
+
+## Known limitations
+
+- Hot-seat PvP only — no computer opponent yet (the hint search would be its natural starting point).
+- The hint engine covers singles, pairs, straights and full houses; it won't volunteer a bomb.
+- The scene is laid out for a fixed 1920 × 1080 table.
 
 ## Authors
+
+Built for *Introduction to Computer Science* at NCKU by
 
 - **Ana Liu** ([@12yuuuu](https://github.com/12yuuuu))
 - **Donna Hsu**
