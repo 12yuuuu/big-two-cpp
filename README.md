@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/rule_engine-hand--rolled-9f1a1a" alt="hand-rolled rule engine">
 </p>
 
-A desktop implementation of **Big Two**, written in **C++ / Qt 5**. There is no game framework underneath — every rule, interaction and screen is built directly on Qt's Graphics View scene graph: a hand-rolled rule engine, hot-seat multiplayer for 2–4 players, a hint system, multi-round scoring and sound effects.
+A desktop implementation of **Big Two**, written in **C++17 / Qt 5**. There is no game framework underneath — every rule, interaction and screen is built directly on Qt's Graphics View scene graph: a hand-rolled rule engine, hot-seat multiplayer for 2–4 players, a hint system, multi-round scoring and sound effects.
 
 ![Animated showcase of the six card combinations, rendered with the game's actual card art](docs/combinations.gif)
 
