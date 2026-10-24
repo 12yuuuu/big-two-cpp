@@ -5,7 +5,7 @@
 ![Build](https://img.shields.io/badge/build-qmake_%2B_make-blue)
 ![Course](https://img.shields.io/badge/course-NCKU_EE_Project_2-9f1a1a)
 
-A desktop implementation of **Big Two**, the classic Taiwanese climbing card game — written from scratch in **C++ / Qt 5** with a custom rule engine, hot-seat multiplayer for 2–4 players, a hint system, multi-round scoring, sound effects, and a fully mouse-driven table UI.
+A desktop implementation of **Big Two**, written from scratch in **C++ / Qt 5** with a custom rule engine, hot-seat multiplayer for 2–4 players, a hint system, multi-round scoring, sound effects, and a fully mouse-driven table UI.
 
 <p align="center">
   <img src="docs/combinations.gif" alt="Animated showcase of the six card combinations, rendered with the game's actual card art" width="760">
