@@ -131,19 +131,10 @@ bigtwo/
 │   ├── bigTwo.pro          # qmake project
 │   └── dataset/            # card art, table backgrounds, UI sprites, sounds
 ├── README.pdf              # original course README
-└── 大老二遊戲說明.pdf        # design document (zh-TW)
+└── introduction.pdf        # design document (zh-TW)
 ```
-
-## What I'd do next
-
-- Extract the rule engine (`isSelectionValid` / `isPutValid`) into a standalone, UI-free class with unit tests
-- Add a computer opponent on top of the existing hint-search logic
-- Replace the per-turn scene rebuild with incremental item updates and animations
-- Modernize memory management with smart pointers / parent-child ownership
 
 ## Authors
 
-Built as Project 2 of the NCKU EE programming course by
-
-- **Kuan-Yu (Ana) Liu** — [@12yuuuu](https://github.com/12yuuuu)
+- **Ana Liu** — [@12yuuuu](https://github.com/12yuuuu)
 - **Donna Hsu**
